@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 article = 'NG SHIT'
 blamNum = 0
 deleteNum = 0
-for num in range(730000, 730905):
+for num in range(730900, 730905):
     url = "https://www.newgrounds.com/portal/view/" + num.__str__()
     try:
         page = urlopen(url)
@@ -22,6 +22,10 @@ for num in range(730000, 730905):
         else:
             article = article + '\n' + i.text + " " + num.__str__()
             print(i.text + ' https://www.newgrounds.com/portal/view/' + num.__str__())
+
+            stats = soup.find('div', {"id":"sidestats"})
+            for daStats in stats.findAll('dd'):
+                print(daStats.text)
 else:
     article = article + "\nBLAMS: " + blamNum.__str__() + "\nDELETES: " + deleteNum.__str__()
     with open('scraped_text.txt', 'w', encoding='utf-8') as file:
