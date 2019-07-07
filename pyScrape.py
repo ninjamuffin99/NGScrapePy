@@ -4,6 +4,12 @@ from bs4 import BeautifulSoup
 article = 'NG SHIT'
 blamNum = 0
 deleteNum = 0
+eRated = 0
+tRated = 0
+mRated = 0
+aRated = 0
+
+
 totalLoops = 0
 
 theDate = 'Jan 1'
@@ -13,18 +19,27 @@ def scrapeDates(minProj, maxProj):
     global article
     global blamNum
     global deleteNum
+    global eRated
+    global tRated
+    global mRated
+    global aRated
     global totalLoops
     global theDate
 
     article = 'NG SHIT'
     blamNum = 0
     deleteNum = 0
+    eRated = 0
+    tRated = 0
+    mRated = 0
+    aRated = 0
     totalLoops = 0
     for num in range(minProj, maxProj):
         totalLoops += 1
         scrapeProject(num)
     else:
-        article = article + "\nBLAMS: " + blamNum.__str__() + "\nDELETES: " + deleteNum.__str__() + "\nTOTAL SUBMISSIONS SCRAPED: " + totalLoops.__str__()
+        article = article + "\nE RATED: " + eRated.__str__() + "\nT RATED: " + tRated.__str__() + "\nM RATED: " + mRated.__str__() + "\nA RATED: " + aRated.__str__()
+        article = article + "\n\nBLAMS: " + blamNum.__str__() + "\nDELETES: " + deleteNum.__str__() + "\nTOTAL SUBMISSIONS SCRAPED: " + totalLoops.__str__()
         with open('scraped_text.txt', 'w', encoding='utf-8') as file:
             file.write(article)
 
@@ -40,6 +55,10 @@ def scrapeProject(projID):
     global article
     global blamNum
     global deleteNum
+    global eRated
+    global tRated
+    global mRated
+    global aRated
     global totalLoops
     global theDate
 
@@ -85,6 +104,7 @@ def scrapeProject(projID):
                         article = article + tags.text + " "
                 article = article + '\n\n'
                 
+                ##DATE AND TIME
                 sideStatsBaby = soup.find_all('dl', {'class':'sidestats'})
                 if (sideStatsBaby.__str__() == "None"):
                     print("Dead date???")
@@ -93,19 +113,35 @@ def scrapeProject(projID):
                     rowShit = 0
                     for row in sideStatsBaby:
                         if (rowShit > 0):
-                            moreRow = row.find_all('dd');
+                            moreRow = row.find_all('dd')
                             print(moreRow)
                             print("CLEANED SHIT")
                             str_cells = str(moreRow)
                             cleaned = BeautifulSoup(str_cells, 'html.parser').get_text()
                             cleaned = cleaned[1:]
                             cleaned = cleaned[:-1]
-                            print(cleaned.split(','))
-                        rowShit += 1
-                    ##print(sideStatsBaby)
-                    ##theDate = sideStatsBaby.findAll("dd")[0] + " "
-                    ##theDate = theDate + sideStatsBaby.findAll("dd")[1]
-                    ##print(sideStatsBaby.findAll('dd'))
+                            cleanedArray = cleaned.split(',')
 
-                ##for daStats in stats.findAll('dd'):
-                ##    article = article + " " + daStats.text  
+                            article = article + "Posted: " + cleanedArray.__str__()
+
+                            print(cleanedArray[0] + cleanedArray[2])
+                        rowShit += 1
+                
+                article = article + '\n'
+                ratingShit = soup.find_all('div', {'id': 'embed_header'})
+                for shit in ratingShit:
+                    moreShit = shit.find_all('h2')
+                    theRating = moreShit.__str__()[18]
+                    article = article + "RATING: " + theRating
+
+                    if (theRating == 'e'):
+                        eRated += 1
+                    if (theRating == 't'):
+                        tRated += 1
+                    if (theRating == 'm'):
+                        mRated += 1
+                    if (theRating == 'a'):
+                        aRated += 1
+
+                    print("RATED: " + moreShit.__str__()[18])
+                
