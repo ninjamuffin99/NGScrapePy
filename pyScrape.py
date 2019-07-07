@@ -48,7 +48,7 @@ def scrapeProject(projID):
     try:
         page = urlopen(url)
     except:
-        print("DELETED")
+        print("DELETED " + url)
         deleteNum += 1
         return
     soup = BeautifulSoup(page, 'html.parser')
@@ -58,10 +58,10 @@ def scrapeProject(projID):
         if i.text == "Author Comments":
             article = article + "-------\nBLAMMED\n-------"
             blamNum += 1
-            print("BLAMMED")
+            print("BLAMMED " + url)
         else:
-            article = article + '\n' + i.text + " " + projID.__str__()
-            print(i.text + ' https://www.newgrounds.com/portal/view/' + projID.__str__())
+            article = article + '\n' + i.text + " " + url
+            print(i.text + " " + url)
 
             stats = soup.find('div', {"id":"sidestats"})
 
@@ -85,15 +85,27 @@ def scrapeProject(projID):
                         article = article + tags.text + " "
                 article = article + '\n\n'
                 
-                sideStatsBaby = soup.find('dl', {'class':'sidestats'})
+                sideStatsBaby = soup.find_all('dl', {'class':'sidestats'})
                 if (sideStatsBaby.__str__() == "None"):
                     print("Dead date???")
                 else:
-                    print(sideStatsBaby.findAll("dd"))
+                    print("whatever")
+                    rowShit = 0
+                    for row in sideStatsBaby:
+                        if (rowShit > 0):
+                            moreRow = row.find_all('dd');
+                            print(moreRow)
+                            print("CLEANED SHIT")
+                            str_cells = str(moreRow)
+                            cleaned = BeautifulSoup(str_cells, 'html.parser').get_text()
+                            cleaned = cleaned[1:]
+                            cleaned = cleaned[:-1]
+                            print(cleaned.split(','))
+                        rowShit += 1
+                    ##print(sideStatsBaby)
                     ##theDate = sideStatsBaby.findAll("dd")[0] + " "
                     ##theDate = theDate + sideStatsBaby.findAll("dd")[1]
                     ##print(sideStatsBaby.findAll('dd'))
 
                 ##for daStats in stats.findAll('dd'):
                 ##    article = article + " " + daStats.text  
-    

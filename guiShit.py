@@ -11,7 +11,6 @@ def press(button):
     if button == "Exit":
         app.stop()
     else:
-        
         usr = app.getEntry("Min Project Num")
         pwd = app.getEntry("Max Project Num")
         print("User: ", usr.__int__(), "Pass: ", pwd.__int__())
